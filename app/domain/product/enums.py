@@ -22,3 +22,5 @@ class ProductsCategory(str, Enum):
     PETSHOP = "PETSHOP"
     VIAGEM = "VIAGEM"
     OUTROS = "OUTROS"
+    SERVICO = "SERVICO"
+    UNCATEGORIZED = "UNCATEGORIZED"
