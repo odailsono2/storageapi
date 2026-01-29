@@ -1,6 +1,7 @@
 from .entity import Product
 from .enums import ProductsCategory
-from .entity import ProductId
+from .Shares import ProductId
+from ...infra.Inmemory.repository import ProductRepository
 
 from .constants import (
     MAX_PRODUCT_PRICE,
@@ -13,11 +14,13 @@ from .constants import (
 
 __all__ = [
     "Product",
-    "ProductsCategory",
     "ProductId",
+    "ProductsCategory",
+    "Shares",
     "MAX_PRODUCT_PRICE",
     "LIMIT_PRICE",
     "MIN_STOCK_QUANTITY",
     "MAX_STOCK_QUANTITY",
     "DEFAULT_STOCK_QUANTITY",
+    "ProductRepository",
 ]

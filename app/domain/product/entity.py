@@ -1,11 +1,9 @@
 from __future__ import annotations
 from dataclasses import dataclass
-from typing import NewType
+
+from app.domain.product.Shares import ProductId
 
 from .enums import ProductsCategory
-
-
-ProductId = NewType("ProductId", int)
 
 
 @dataclass(frozen=True)

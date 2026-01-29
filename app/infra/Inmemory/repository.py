@@ -3,15 +3,16 @@ from __future__ import annotations
 from dataclasses import replace
 from typing import Iterable
 
-from .entity import Product
-from .entity import ProductId
-from .enums import ProductCategory
+from ...domain.product.Shares import ProductId
+
+from ...domain.product.entity import Product
+from ...domain.product.enums import ProductsCategory
 
 
 class ProductRepository:
     """Interface para o repositório de produtos."""
 
-    def __init__(self):
+    def __init__(self, repo: ProductRepository | None = None) -> None:
         self._products = {}
         self._next_id = 1
 
@@ -26,7 +27,8 @@ class ProductRepository:
         name: str,
         price: float,
         stock: int,
-        category: ProductCategory,
+        category: ProductsCategory,
+        description: str = "",
         active: bool = True,
     ) -> Product:
         product = Product(
@@ -34,20 +36,22 @@ class ProductRepository:
             name=name,
             price=price,
             stock=stock,
+            description=description,
             category=category,
             active=active,
         )
         self._products[product.id] = product
+
         return product
 
     def get_by_id(self, product_id: ProductId) -> Product | None:
         """Obtém um produto pelo seu ID."""
-        self._products.get(product_id)
+        return self._products.get(product_id)
 
     def list(
         self,
         *,
-        category: ProductCategory | None = None,
+        category: ProductsCategory | None = None,
         min_price: float | None = None,
         max_price: float | None = None,
         active: bool | None = None,
@@ -96,4 +100,19 @@ class ProductRepository:
 
     def delete(self, product_id: ProductId) -> None:
         """Remove um produto do repositório pelo seu ID."""
-        pass
+        self.require(product_id)
+        del self._products[product_id]
+
+    def require(self, product_id: ProductId) -> Product:
+        """Obtém um produto pelo seu ID, ou levanta erro se não existir."""
+        product = self.get_by_id(product_id)
+        if product is None:
+            raise KeyError(f"Produto com ID {product_id} não encontrado.")
+        return product
+
+    def change_active_status(self, product_id: ProductId, *, active: bool) -> Product:
+        """Ativa ou desativa um produto."""
+        current = self.require(product_id)
+        updated = replace(current, active=active)
+        self._products[product_id] = updated
+        return updated
